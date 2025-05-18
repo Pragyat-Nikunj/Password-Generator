@@ -1,5 +1,7 @@
 # Password Generator
 
+> 🚀 **Check out the live app:** [Password Generator Live Demo](https://password-generator-eta-hazel-43.vercel.app/)
+
 ## Project Overview
 
 A simple and customizable password generator built with React. This application allows users to generate secure passwords with adjustable length and options to include numbers and special characters.
