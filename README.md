@@ -4,14 +4,17 @@
 
 ## Project Overview
 
-A simple and customizable password generator built with React. This application allows users to generate secure passwords with adjustable length and options to include numbers and special characters.
+A simple and customizable password generator built with React. This application allows users to generate secure passwords with adjustable length and options to include numbers and special characters. The password generation uses cryptographically secure random values and provides a password strength indicator.
 
 ## Features
 
-- Generate random passwords
+- Generate random, secure passwords
 - Adjustable password length (6-100 characters)
 - Option to include numbers
 - Option to include special characters
+- Ensures at least one number/special character if selected
+- Cryptographically secure random password generation
+- Password strength indicator (Too Weak, Moderate, Good, Strong)
 - Copy generated password to clipboard
 - Responsive and modern UI
 
@@ -39,6 +42,8 @@ A simple and customizable password generator built with React. This application 
 
 - Adjust the password length using the slider.
 - Toggle the checkboxes to include numbers and/or special characters.
+- The password will always include at least one number or special character if selected.
+- View the password strength indicator below the controls.
 - Click "Copy" to copy the generated password to your clipboard.
 
 ## Technologies Used
@@ -46,6 +51,7 @@ A simple and customizable password generator built with React. This application 
 - [React](https://reactjs.org/)
 - [Vite](https://vitejs.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [Web Crypto API](https://developer.mozilla.org/en-US/docs/Web/API/Crypto)
 
 ## Contributing
 

@@ -1,7 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
 
 function App() {
   const [length, setLength] = useState(8);
@@ -13,16 +11,32 @@ function App() {
   const passwordRef = useRef(null);
   const generatePassword = useCallback(() => {
     let pass = "";
-    let str = 
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-    if (numberAllowed) str += "0123456789";
-    if (charAllowed) str += "!@#$%^&*+-_?"
-
-    for (let i = 1; i < length; i++) {
-      const char = Math.floor(Math.random() * str.length + 1);
-      pass += str.charAt(char);
+    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let numbers = "0123456789";
+    let symbols = "!@#$%^&*+-_?";
+    const mustInclude = [];
+    if (numberAllowed){
+      str += numbers;
+      mustInclude.push(numbers[Math.floor(Math.random() * numbers.length)]);
     }
+    if (charAllowed) {
+      str += symbols;
+      mustInclude.push(symbols[Math.floor(Math.random() * symbols.length)]);
+    };
+
+    // Use crypto.getRandomValues for cryptographically secure random numbers
+    const array = new Uint32Array(Number(length));
+    window.crypto.getRandomValues(array);
+
+    
+    for (let i = 0; i < length - mustInclude.length; i++) {
+      const charIndex = array[i] % str.length;
+      pass += str.charAt(charIndex);
+    }
+
+
+    pass += mustInclude.join("");
+
     setPassword(pass);
   }, [length, numberAllowed, charAllowed]);
 
@@ -33,6 +47,32 @@ function App() {
   const copyPasswordToClipboard = () => {
     window.navigator.clipboard.writeText(password);
     passwordRef.current?.select();
+  }
+  const passwordStrength = () => {
+    if (length < 8) return "Too Weak"
+
+    if (length < 10) return "Moderate"
+
+    if (length >= 10 && numberAllowed && charAllowed) return "Strong"
+
+    return "Good";
+  }
+  const getStrengthColor = () => {
+    const strength = passwordStrength();
+    
+    switch (strength) {
+      case "Too Weak":
+        return "text-red-500";
+      case "Moderate":
+        return "text-yellow-500";
+      case "Strong":
+        return "text-green-500";
+      case "Good":
+        return "text-blue-500";
+      default:
+        return "text-orange-500";
+    }
+
   }
   return (
     <div className="w-full max-w-md mx-auto shadow-md rounded-lg px-4 py-3 my-8 bg-gray-800 text-orange-500">
@@ -49,12 +89,12 @@ function App() {
         <button
           className="outline-none bg-blue-700 text-white px-3
         py-0.5 shrink-0"
-        onClick={copyPasswordToClipboard}
+          onClick={copyPasswordToClipboard}
         >
           Copy
         </button>
       </div>
-      <div className="flex text-sm gap-x-2">
+      <div className="flex text-sm gap-x-2 my-3">
         <div className="flex items-center gap-x-1">
           <input
             type="range"
@@ -92,6 +132,9 @@ function App() {
           <label htmlFor="charInput">Character</label>
         </div>
       </div>
+      <p className={`font-semibold ${getStrengthColor()}`}>
+        Password Strength: {passwordStrength()}
+      </p>
     </div>
   );
 }
